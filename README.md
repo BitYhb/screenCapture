@@ -1,2 +1,2 @@
 # screenCapture
-ffmpeg简单视屏录制1
+ffmpeg简单视屏录制2
