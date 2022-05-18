@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 
+
 #include <QThread>
 #include <QScreen>
 Widget::Widget(QWidget *parent)
@@ -9,6 +10,7 @@ Widget::Widget(QWidget *parent)
     startBtn = new QPushButton(this);
     stopBtn  = new QPushButton(this);
     partBtn  = new QPushButton(this);
+    resize(900,900);
     qDebug() << "main thread:" <<QThread::currentThreadId();
     startBtn->setGeometry(0,0,120,60);
     stopBtn->setGeometry(300,0,120,60);
@@ -16,12 +18,14 @@ Widget::Widget(QWidget *parent)
     startBtn->setText("start");
     stopBtn->setText("stop");
     partBtn->setText("part");
-
     QObject::connect(startBtn,&QPushButton::clicked,this,&Widget::onStartBtnClicked);
     QObject::connect(stopBtn,&QPushButton::clicked,this,&Widget::onStopBtnClicked);
     QObject::connect(partBtn,&QPushButton::clicked,this,&Widget::onpartBtnClicked);
-
     m_screenCapThread = new ScreenCapture;
+    partWidget = new PartArea(this);
+    partWidget->setVisible(false);
+
+    connect(partWidget,&PartArea::sigDrawRelease,this,&Widget::onSigDrawRelease);
 }
 
 Widget::~Widget()
@@ -33,18 +37,23 @@ Widget::~Widget()
 void Widget::onStartBtnClicked()
 {
     getScreenSize();
-    partCaptureInit(0,0,m_screenWidth,m_screenHeight);
+    captureInit(0,0,m_screenWidth,m_screenHeight);
     m_screenCapThread->start();
 }
 
 void Widget::onpartBtnClicked()
 {
     qDebug() << "do part";
-    partCaptureInit(100,100,800,800);
+    partWidget->setVisible(true);
+}
+
+void Widget::onSigDrawRelease(const QRect rect)
+{
+    captureInit(rect.x(),rect.y(),rect.width(),rect.height());
     m_screenCapThread->start();
 }
 
-void Widget::partCaptureInit(const int offsetX, const int offsetY, const int width, const int height)
+void Widget::captureInit(const int offsetX, const int offsetY, const int width, const int height)
 {
     m_screenCapThread->initGeometry(offsetX,offsetY,width,height);
 }
