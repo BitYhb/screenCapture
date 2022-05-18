@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icon/screenCapture_close.svg</file>
+        <file>resources/icon/screenCapture_pause.svg</file>
+        <file>resources/icon/screenCapture_stop.svg</file>
+    </qresource>
+</RCC>

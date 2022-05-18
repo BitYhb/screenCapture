@@ -7,6 +7,11 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
+    //QPalette pal(palette());
+    //pal.setColor(QPalette::Background, Qt::black);
+    //setAutoFillBackground(true);
+    //setPalette(pal);
+
     startBtn = new QPushButton(this);
     stopBtn  = new QPushButton(this);
     partBtn  = new QPushButton(this);
@@ -18,10 +23,15 @@ Widget::Widget(QWidget *parent)
     startBtn->setText("start");
     stopBtn->setText("stop");
     partBtn->setText("part");
+    //
+    s = new ScreenCaptureDialog(this);
+    s->setGeometry(100,100,289,34);
+//    s->raise();
+    s->show();
     QObject::connect(startBtn,&QPushButton::clicked,this,&Widget::onStartBtnClicked);
     QObject::connect(stopBtn,&QPushButton::clicked,this,&Widget::onStopBtnClicked);
     QObject::connect(partBtn,&QPushButton::clicked,this,&Widget::onpartBtnClicked);
-    m_screenCapThread = new ScreenCapture;
+    m_screenCapThread = new ScreenCapture(this);
     partWidget = new PartArea(this);
     partWidget->setVisible(false);
 

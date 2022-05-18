@@ -2,7 +2,7 @@
 #define SCREENCAPTUREFACTORY_H
 
 
-#include "src/screencapture.h"
+#include "screencapture.h"
 
 class ScreenCaptureFactory final
 {

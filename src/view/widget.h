@@ -4,8 +4,9 @@
 #include <QWidget>
 #include <QPushButton>
 
-#include "screencapture.h"
-#include "src/partarea.h"
+#include "src/core/screencapture.h"
+#include "src/moudle/partarea.h"
+#include "src/view/screencapturedialog.h"
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -27,7 +28,7 @@ private:
     QPushButton *startBtn;
     QPushButton *stopBtn;
     QPushButton *partBtn;
-
+    ScreenCaptureDialog *s;
     int m_screenWidth;
     int m_screenHeight;
     PartArea *partWidget;

@@ -24,17 +24,20 @@ find_package(Qt${QT_VERSION_MAJOR}
     Gui
     REQUIRED)
 set(PROJECT_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/resources.qrc
         "main.cpp"
-        "src/widget.cpp"
-        "src/widget.h"
-        "src/screencapture.cpp"
-        "src/screencapture.h"
-        "src/decodevideo.cpp"
-        "src/decodevideo.h"
-        "src/partarea.cpp"
-        "src/partarea.h"
-        "src/screencapturefactory.cpp"
-        "src/screencapturefactory.h"
+        "src/view/widget.cpp"
+        "src/view/widget.h"
+        "src/core/screencapture.cpp"
+        "src/core/screencapture.h"
+        "src/core/decodevideo.cpp"
+        "src/core/decodevideo.h"
+        "src/moudle/partarea.cpp"
+        "src/moudle/partarea.h"
+        "src/core/screencapturefactory.cpp"
+        "src/core/screencapturefactory.h"
+        "src/view/screencapturedialog.h"
+        "src/view/screencapturedialog.cpp"
 )
 
 set(ffmpeg_DIR "${PROJECT_SOURCE_DIR}/3rdpart/ffmpeg4.4.1/")
