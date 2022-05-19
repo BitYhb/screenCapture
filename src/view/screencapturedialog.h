@@ -11,16 +11,15 @@ class ScreenCaptureDialog : public QWidget
     Q_DECLARE_PRIVATE(ScreenCaptureDialog);
 public:
     explicit ScreenCaptureDialog(QWidget *parent = nullptr);
-    ~ScreenCaptureDialog() = default;
+    ~ScreenCaptureDialog();
+private slots:
+    void onStartButtonClicked();
+    void onPauseButtonClicked();
+    void onCloseButtonClicked();
+    void onTimeout();
 protected:
     void paintEvent(QPaintEvent *event);
 private:
-    QLabel *m_timeLabel;
-    QLabel *m_stopAndstartLabel;
-    QPushButton *m_startButton;
-    QPushButton *m_pauseButton;
-    QPushButton *m_closeButton;
-
     QScopedPointer<ScreenCaptureDialogPrivate> d_ptr;
 };
 

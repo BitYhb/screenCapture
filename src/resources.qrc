@@ -3,5 +3,9 @@
         <file>resources/icon/screenCapture_close.svg</file>
         <file>resources/icon/screenCapture_pause.svg</file>
         <file>resources/icon/screenCapture_stop.svg</file>
+        <file>resources/icon/screenCapture_start_highlight.svg</file>
+        <file>resources/icon/screenCapture_start.svg</file>
+        <file>resources/icon/screenCapture_stop_highlight.svg</file>
+        <file>resources/icon/screenCapture_pause_highlight.svg</file>
     </qresource>
 </RCC>

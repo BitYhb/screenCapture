@@ -48,7 +48,11 @@ void Widget::onStartBtnClicked()
 {
     getScreenSize();
     captureInit(0,0,m_screenWidth,m_screenHeight);
-    m_screenCapThread->start();
+    s = new ScreenCaptureDialog(this);
+    s->setGeometry(100,100,289,34);
+//    s->raise();
+    s->show();
+    //m_screenCapThread->start();
 }
 
 void Widget::onpartBtnClicked()

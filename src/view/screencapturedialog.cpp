@@ -2,7 +2,9 @@
 #include <QHBoxLayout>
 #include <QStyleOption>
 #include <QPainter>
-
+#include <QTimer>
+#include <QTime>
+#include <QDebug>
 class ScreenCaptureDialogPrivate
 {
     Q_DECLARE_PUBLIC(ScreenCaptureDialog);
@@ -21,8 +23,10 @@ private:
     QPushButton *m_pauseButton;
     QPushButton *m_closeButton;
 
-    ScreenCaptureDialog* const q_ptr;
+    QTimer *m_timer;
+    QTime m_time;
 
+    ScreenCaptureDialog* const q_ptr;
 };
 void ScreenCaptureDialogPrivate::init()
 {
@@ -55,6 +59,13 @@ void ScreenCaptureDialogPrivate::init()
     m_stopAndstartLabel->setObjectName("stopAndstartLabel");
     m_stopAndstartLabel->setAlignment(Qt::AlignCenter);
 
+    m_timer = new QTimer(q);
+    m_time.setHMS(0,0,0,0);
+
+    QObject::connect(m_startButton,&QPushButton::clicked,q,&ScreenCaptureDialog::onStartButtonClicked);
+    QObject::connect(m_pauseButton,&QPushButton::clicked,q,&ScreenCaptureDialog::onPauseButtonClicked);
+    QObject::connect(m_closeButton,&QPushButton::clicked,q,&ScreenCaptureDialog::onCloseButtonClicked);
+    QObject::connect(m_timer,&QTimer::timeout,q,&ScreenCaptureDialog::onTimeout);
 }
 void ScreenCaptureDialogPrivate::setStyle()
 {
@@ -80,12 +91,39 @@ void ScreenCaptureDialogPrivate::setStyle()
                                "}");
     m_startButton->setStyleSheet("QPushButton"
                                  "{"
-                                 "background:url(:/resources/icon/screenCapture_stop.svg) center no-repeat;"
-                                 "  background-color:transparent;}");
+                                 "  background:url(:/resources/icon/screenCapture_stop.svg) center no-repeat;"
+                                 "  background-color:transparent;"
+                                 "}\n"
+                                 "QPushButton::checked"
+                                 "{"
+                                 "  background:url(:/resources/icon/screenCapture_stop_highlight.svg) center no-repeat;"
+                                 "  background-color:transparent;"
+                                 "}\n"
+                                 "QPushButton::pressed"
+                                 "{"
+                                 "  background:url(:/resources/icon/screenCapture_start_highlight.svg) center no-repeat;"
+                                 "  background-color:transparent;"
+                                 "}\n"
+                                 "QPushButton::hover"
+                                 "{"
+                                 "  background:url(:/resources/icon/screenCapture_stop_highlight.svg) center no-repeat;"
+                                 "  background-color:transparent;"
+                                 "}\n");
     m_pauseButton->setStyleSheet("QPushButton"
                                  "{"
                                  "  background:url(:/resources/icon/screenCapture_pause.svg) center no-repeat;"
-                                 "  background-color:transparent;}");
+                                 "  background-color:transparent;"
+                                 "}"
+                                 "QPushButton::hover"
+                                 "{"
+                                 "  background:url(:/resources/icon/screenCapture_pause_highlight.svg) center no-repeat;"
+                                 "  background-color:transparent;"
+                                 "}"
+                                 "QPushButton::pressed"
+                                 "{"
+                                 "  background:url(:/resources/icon/screenCapture_pause_highlight.svg) center no-repeat;"
+                                 "  background-color:transparent;"
+                                 "}");
     m_closeButton->setStyleSheet("QPushButton"
                                  "{"
                                  "  background:url(:/resources/icon/screenCapture_close.svg) center no-repeat;"
@@ -115,6 +153,57 @@ ScreenCaptureDialog::ScreenCaptureDialog(QWidget *parent)
     d->setLayout();
     d->setStyle();
 }
+
+ScreenCaptureDialog::~ScreenCaptureDialog()
+{
+    Q_D(ScreenCaptureDialog);
+    if(d->m_closeButton)
+        delete d->m_closeButton;
+    if(d->m_pauseButton)
+        delete d->m_pauseButton;
+    if(d->m_startButton)
+        delete d->m_startButton;
+    if(d->m_stopAndstartLabel)
+        delete d->m_stopAndstartLabel;
+    if(d->m_timeLabel)
+        delete d->m_timeLabel;
+    if(d->m_timer)
+        delete d->m_timer;
+
+}
+
+void ScreenCaptureDialog::onStartButtonClicked()
+{
+    Q_D(ScreenCaptureDialog);
+    if(d->m_timer->isActive())
+        d->m_timer->stop();
+    d->m_timer->start(1000);
+}
+
+void ScreenCaptureDialog::onPauseButtonClicked()
+{
+    Q_D(ScreenCaptureDialog);
+    if(d->m_timer->isActive())
+    {
+        d->m_timer->stop();
+        d->m_time.setHMS(0,0,0);
+        d->m_timeLabel->setText(d->m_time.toString("hh:mm:ss"));
+    }
+}
+
+void ScreenCaptureDialog::onCloseButtonClicked()
+{
+    this->close();
+    delete this;
+}
+
+void ScreenCaptureDialog::onTimeout()
+{
+    Q_D(ScreenCaptureDialog);
+    d->m_time = d->m_time.addSecs(1);
+    d->m_timeLabel->setText(d->m_time.toString("hh:mm:ss"));
+}
+
 void ScreenCaptureDialog::paintEvent(QPaintEvent *event)
 {
     QStyleOption opt;
